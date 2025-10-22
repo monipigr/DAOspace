@@ -5,9 +5,11 @@ pragma solidity ^0.8.24;
 import "../lib/openzeppelin-contracts/contracts/access/Ownable.sol";
 import "../lib/openzeppelin-contracts/contracts/token/ERC20/IERC20.sol";
 import "../lib/openzeppelin-contracts/contracts/token/ERC20/utils/SafeERC20.sol";
+import "../lib/openzeppelin-contracts/contracts/utils/ReentrancyGuard.sol";
+
 import "./DAO.sol";
 
-contract DAOTreasury is Ownable {
+contract DAOTreasury is Ownable, ReentrancyGuard {
     using SafeERC20 for IERC20;
 
     DAO public dao;
@@ -37,7 +39,7 @@ contract DAOTreasury is Ownable {
         emit DAOSet(_dao);
     }
 
-    function spendFunds(uint256 proposalId, address recipient, uint256 amount, address token) external {
+    function spendFunds(uint256 proposalId, address recipient, uint256 amount, address token) external nonReentrant {
         require(recipient != address(0), "Invalid recipient");
         require(amount > 0, "Amount must be greater than 0");
         require(approvedProposals[proposalId], "Proposal must be approved");
@@ -91,7 +93,7 @@ contract DAOTreasury is Ownable {
         emit TreasuryFunded(msg.sender, amount);
     }
 
-    function emergencyWithdraw(address token, uint256 amount, address recipient) external onlyOwner {
+    function emergencyWithdraw(address token, uint256 amount, address recipient) external onlyOwner nonReentrant() {
         // Comprobaciones
         require(amount > 0, "Amount must be greater than 0");
         require(recipient != address(0), "Invalid recipient address");
