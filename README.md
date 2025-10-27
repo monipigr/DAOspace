@@ -8,21 +8,9 @@ A DAO, or Decentralized Autonomous Organization, is a community governed by a se
 In a DAO, the voting power of each member is determined by the number of governance tokens they hold in their wallet. When a decision needs to be made, a proposal is created, and members vote on it. In this case, the impact of each vote is proportional to the member's voting power. Once the voting period ends, the outcome is automatically executed according to the rules defined in the smart contracts.
 A DAO is built on three fundamental pillars:
 
-**Treasury**: The treasury is where the organization's funds are stored during the proposal process. When a proposal is approved, the allocated funds are automatically transferred to their intended destination based on the predefined rules in the smart contract.
-**Governance Token**: Each DAO typically has its own governance token, which serves as a representation of voting power. In most cases, the more tokens a member holds, the greater their influence on the organization's decisions.
-**DAO Core**: The core of the DAO is where the main logic resides. It defines the rules for creating proposals, voting mechanisms, executing approved proposals, and other customizable aspects of the organization's functioning.
-
-A DAO aims for Decentralized Autonomous Organization.
-This is like a community organized within an internal predefined rules written in smarts contracts.
-Every person on the DAO can participate in the decision making process through their voting power asigned.
-The voting power is determined by the number of token the user has on their wallet.
-For example, there's a decisions to be taken for the community. A proposal is created. The user votes for the proposal. Depending on their voting power, their vote will have more impact.
-When the voting time is ended, automaticly the funds allocatted for that proposal are transfer according to the predefined contract rules.
-A DAO is based on 3 pilars:
-
-- **Treasury**: Where the funds are stored during the proposal time. When proposal time is ended, funds are transfered to their destination according to the proposal rules.
-- **Governance token**: Usually each DAO has each gobernance token. This is serves as voting power. Normally as much tokens stored more voting power you have.
-- **DAO Core**: Where the core dao logic occurs. Each dao can define their rules for creating the proposals, voting rules, execute proposals and other customizable rules
+- 💰**Treasury**: The treasury is where the organization's funds are stored during the proposal process. When a proposal is approved, the allocated funds are automatically transferred to their intended destination based on the predefined rules in the smart contract.
+- 🪙**Governance Token**: Each DAO typically has its own governance token, which serves as a representation of voting power. In most cases, the more tokens a member holds, the greater their influence on the organization's decisions.
+- 📜**DAO Core**: The core of the DAO is where the main logic resides. It defines the rules for creating proposals, voting mechanisms, executing approved proposals, and other customizable aspects of the organization's functioning.
 
 Some well-known examples of successful DAOs in the blockchain space include:
 
@@ -109,9 +97,6 @@ Ran 3 test suites in 227.03ms (54.18ms CPU time): 70 tests passed, 0 failed, 0 s
 ╰-----------------------------------+------------------+------------------+-----------------+-----------------╯
 # Run all tests
 forge test
-
-# Run with verbosity
-forge test -vvv
 
 # Run specific test
 forge test -vvvv --match-test test_createProposal
