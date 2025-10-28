@@ -52,16 +52,14 @@ contract DAO is Ownable, ReentrancyGuard {
     }
 
     function createProposal(string memory description, address recipient, uint256 amount, address token) external returns(uint256 proposalId) {
-        // Comprobaciones
         require(bytes(description).length > 0, "Invalid description");
         require(recipient != address(0), "Invalid recipient address");
         require(amount > 0, "Amount must be greater than 0");
         require(proposalTreshold <= governanceToken.getVotingPower(msg.sender), "Insufficient voting power to create proposal"); 
 
-        // creamos nueva struct y sumamos
         proposalId = proposalCount;
         proposalCount++;
-        // asigamos las propiedades de la struct
+
         Proposal storage proposal = proposals[proposalId];
         proposal.id = proposalId;
         proposal.proposer = msg.sender;
@@ -72,30 +70,20 @@ contract DAO is Ownable, ReentrancyGuard {
         proposal.amount = amount;
         proposal.token = token;
 
-        // emitimos evento
         emit ProposalCreated(proposalId, msg.sender, description, proposal.startTime, proposal.endTime);
     }
 
     function vote(uint256 proposalId, bool support) external {
         Proposal storage proposal = proposals[proposalId];
-        // Comprobaciones
-        // Que el proposer de la address no es 0
         require(proposal.proposer != address(0), "Proposal not defined");
-        // Periodo de votacion activo
         require(block.timestamp > proposal.startTime, "Voting period not started");
-        // Si el periodo de votación no ha terminado
         require(proposal.endTime > block.timestamp, "Voting period ended");
-        // Si ya hemos votado o no
         require(!proposal.hasVoted[msg.sender], "Already voted");
-        // Propuesta no ejecutada
         require(!proposal.executed, "Proposal already executed"); 
-        // Propuesta no cancelada
         require(!proposal.canceled, "Proposal canceled"); 
 
-        // Comprobamos poder de voto
         uint256 votes = governanceToken.getVotingPower(msg.sender);
         require(votes > 0, "No voting power");
-        // Actualizamos y sumamos el voto
         proposal.hasVoted[msg.sender] = true;
         proposal.votedFor[msg.sender] = support;
         if(support) {
@@ -103,53 +91,35 @@ contract DAO is Ownable, ReentrancyGuard {
         } else {
             proposal.againstVotes += votes;
         }
-        // Emitimos el voto
         emit Voted(proposalId, msg.sender, support, votes);
     }
 
     function cancelProposal(uint256 proposalId) external {
         Proposal storage proposal = proposals[proposalId];
-        // Comprobaciones
-        // que existe la propuesta
         require(proposal.proposer != address(0), "Proposal not defined");
-        // que no ha sido cancelada
         require(!proposal.canceled, "Proposal already canceled");
-        // que no ha sido ejecutada ya
         require(!proposal.executed, "Proposal already executed");
-        // que solo la puede ejecutar el owner o el creador de la propuesta
         require(msg.sender == owner() || msg.sender == proposal.proposer, "Not authorized to cancel");
 
-        // Actualizamos estados
         proposal.canceled = true;
 
-        // Emitimos evento
         emit ProposalCanceled(proposalId);
     }
 
     function executeProposal(uint256 proposalId) external nonReentrant {
         Proposal storage proposal = proposals[proposalId];
-        // Comprobaciones
-        // que la propuesta exsite
         require(proposal.proposer != address(0), "Proposal not defined");
-        // que la propuesta no ha sido ejecutada ya
         require(!proposal.executed, "Proposal already executed");
-        // que la propuesta no ha sido cancelada
         require(!proposal.canceled, "Proposal canceled");
-        // que el periodo de votación ha terminado
         require(proposal.endTime >= block.timestamp, "Voting period not ended yet");
-        // que la propuesta ha alcanzado la participación minima
         require(proposal.forVotes + proposal.againstVotes >= quorumVotes, "Minimum quorum not reached");
-        // que la propuesta ha alcanzado el soporte (los votos) necesario
         require(proposal.forVotes > proposal.againstVotes, "Not enought support");
         
-        // Actualizamos estados
         proposal.executed = true;
 
-        // Gastamos los fondos
         treasury.approveProposal(proposalId);
         treasury.spendFunds(proposalId, proposal.recipient, proposal.amount, proposal.token);
 
-        //Emitimos eventos
         emit ProposalExecuted(proposalId);
     }
 

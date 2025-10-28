@@ -14,32 +14,8 @@ A DAO is built on three fundamental pillars:
 
 Some well-known examples of successful DAOs in the blockchain space include:
 
-**[MakerDAO](https://makerdao.com)**: The creators of DAI, one of the most widely used stablecoins alongside USDT and USDC.
-**[Compound](https://compound.finance/)**: A popular lending and borrowing protocol in the DeFi ecosystem.
-
-┌──────────────────────┐ ┌──────────────────────┐ ┌──────────────────────┐
-│ Treasury │ │ Governance Token │ │ DAO Core │
-│ │ │ │ │ │
-│ Funds: 1000 ETH │ │ Total Supply: 100000 │ │ Proposal Creation │
-│ │ │ Member A: 50000 │ │ Voting Mechanism │
-│ Proposal Funding │ │ Member B: 30000 │ │ Proposal Execution │
-│ │ │ Member C: 20000 │ │ │
-│ Approved Proposals │ │ │ │ Proposal States: │
-│ ✅ Proposal 1 │ │ Voting Power: │ │ 📝 Created │
-│ Funds: 500 ETH │ │ Member A: 50% │ │ 🗳️ Voting Period │
-│ ✅ Proposal 2 │ │ Member B: 30% │ │ ✅ Approved │
-│ Funds: 300 ETH │ │ Member C: 20% │ │ ❌ Rejected │
-│ │ │ │ │ 💰 Executed │
-└──────────────────────┘ └──────────────────────┘ └──────────────────────┘
-▲ ▲ ▲
-│ │ │
-│ Approved Proposals │ │
-└──────────────────────────► │ │
-│ Proposal Voting │
-│ ◄────────────────────────┘
-│
-│ Execution Request
-└─────────────────────────────►
+- **[MakerDAO](https://makerdao.com)**: The creators of DAI, one of the most widely used stablecoins alongside USDT and USDC.
+- **[Compound](https://compound.finance/)**: A popular lending and borrowing protocol in the DeFi ecosystem.
 
 ## ✨ Features
 
