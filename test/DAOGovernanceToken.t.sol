@@ -135,13 +135,13 @@ contract DAOGovernanceTest is Test {
         uint256 delegatedAmount = 2*1e18;
         address delegate = user2;
         deal(address(daoToken), user, 8*1e18);
-        uint256 userBalanceBefore = daoToken.balanceOf(user); // 8
-        uint256 user2BalanceBefore = daoToken.balanceOf(user); // 8
+        uint256 userBalanceBefore = daoToken.balanceOf(user);
+        uint256 user2BalanceBefore = daoToken.balanceOf(user);
 
         vm.startPrank(user);
 
-        daoToken.delegateVotingPower(delegate, delegatedAmount); // user = 8-2 = 6
-        daoToken.undelegateVotingPower(delegatedAmount); //tiene 6, quiere recuperar 1
+        daoToken.delegateVotingPower(delegate, delegatedAmount);
+        daoToken.undelegateVotingPower(delegatedAmount);
 
         vm.stopPrank();
 
@@ -161,13 +161,13 @@ contract DAOGovernanceTest is Test {
         uint256 undelegatedAmount = 1*1e18;
         address delegate = user2;
         deal(address(daoToken), user, 8*1e18);
-        uint256 userBalanceBefore = daoToken.balanceOf(user); // 8
-        uint256 user2BalanceBefore = daoToken.balanceOf(user); // 8
+        uint256 userBalanceBefore = daoToken.balanceOf(user);
+        uint256 user2BalanceBefore = daoToken.balanceOf(user);
 
         vm.startPrank(user);
 
-        daoToken.delegateVotingPower(delegate, delegatedAmount); // user = 8-2 = 6
-        daoToken.undelegateVotingPower(undelegatedAmount); //tiene 6, quiere recuperar 1
+        daoToken.delegateVotingPower(delegate, delegatedAmount);
+        daoToken.undelegateVotingPower(undelegatedAmount);
 
         vm.stopPrank();
 
@@ -199,9 +199,7 @@ contract DAOGovernanceTest is Test {
     }
 
     function test_undelegateVotingPower_revertIfNotDelegatedFirst() public {
-        // uint256 delegatedAmount = 2*1e18;
         uint256 undelegatedAmount = 2*1e18;
-        // address delegate = user2;
         deal(address(daoToken), user, 8*1e18);
         
         vm.startPrank(user);

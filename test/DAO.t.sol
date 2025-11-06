@@ -226,7 +226,6 @@ contract DAOTest is Test {
         vm.stopPrank();
     }
     
-    // TODO: WHEN test_executeProposal done
     function test_vote_revertIfProposalAlreadyExecuted() public {
         // Create proposal
         vm.startPrank(user);

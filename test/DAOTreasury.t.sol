@@ -2,7 +2,6 @@
 
 pragma solidity ^0.8.24;
 
-// import "forge-std/Test.sol";
 import "../lib/forge-std/src/Test.sol";
 import {StdCheats} from "../lib/forge-std/src/StdCheats.sol";
 import "../src/DAOTreasury.sol";
@@ -27,10 +26,6 @@ contract DAOTreasuryTest is Test {
     address user = vm.addr(1);
 
     function setUp() public {
-        // address _governanceToken = address(1); // hacer un mock governance token??
-        // address _treasury = address(2); // hacer un mock treasury ??
-
-
         daoMockToken = new GovernanceMockToken("DaoToken", "DAO", 1000 * 1e18);
         treasuryMock = new TreasuryMock();
 
@@ -107,7 +102,7 @@ contract DAOTreasuryTest is Test {
         IERC20(daoMockToken).approve(address(treasury), amount);
         vm.expectRevert("Invalid token address");
         treasury.fundTreasuryToken(address(invalidMockAddr), amount);
-     }
+    }
 
     function test_fundTreasuryToken_revertIfAmountIs0() public {
         uint256 amount = 0;
@@ -372,7 +367,6 @@ contract DAOTreasuryTest is Test {
         treasury.fundTreasuryToken(address(daoMockToken), amount);
 
         vm.stopPrank();
-
 
         // Approve Proposal
         vm.startPrank(address(daoContract));
