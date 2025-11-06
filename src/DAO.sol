@@ -7,6 +7,11 @@ import "../lib/openzeppelin-contracts/contracts/utils/ReentrancyGuard.sol";
 import "./DAOGovernanceToken.sol";
 import "./interfaces/IDAOTreasury.sol";
 
+/**
+ * @title DAO
+ * @dev Decentralized Autonomous Organization contract
+ * Handles proposal creation, voting, and execution
+ */
 contract DAO is Ownable, ReentrancyGuard {
 
     DAOGovernanceToken public governanceToken;
@@ -30,9 +35,10 @@ contract DAO is Ownable, ReentrancyGuard {
     }
 
     uint256 public proposalTreshold; // Minimum amount of gobernance tokens needed to create a proposal
-    uint256 public votingPeriod;
-    uint256 public quorumVotes;
+    uint256 public votingPeriod; // Duration of voting period in seconds
+    uint256 public quorumVotes; // Minimum votes required for proposal to pass
 
+    // Proposal tracking
     uint256 public proposalCount;
     mapping(uint256 => Proposal) public proposals;
 
@@ -42,7 +48,14 @@ contract DAO is Ownable, ReentrancyGuard {
     event ProposalCanceled(uint256 indexed proposalId);
     event ConfigurationUpdated(uint256 proposalTreshold, uint256 votingPeriod, uint256 quorumVotes);
     
-
+    /**
+     * @dev Constructor
+     * @param _governanceToken Address of the governance token contract
+     * @param _treasury Address of the treasury contract
+     * @param _proposalThreshold Minimum tokens required to create a proposal
+     * @param _votingPeriod Duration of voting period in seconds
+     * @param _quorumVotes Minimum votes required for proposal to pass
+     */
     constructor(address _governanceToken, address _treasury, uint256 _proposalTreshold, uint256 _votingPeriod, uint256 _quorumVotes) Ownable(msg.sender) {
         governanceToken = DAOGovernanceToken(_governanceToken);
         treasury = IDAOTreasury(_treasury);
@@ -50,7 +63,15 @@ contract DAO is Ownable, ReentrancyGuard {
         votingPeriod = _votingPeriod;
         quorumVotes = _quorumVotes;
     }
-
+    
+    /**
+     * @dev Create a new proposal
+     * @param description Description of the proposal
+     * @param recipient Address to receive funds if proposal passes
+     * @param amount Amount of funds to be spent
+     * @param token Token address (address(0) for ETH)
+     * @return proposalId The ID of the created proposal
+     */
     function createProposal(string memory description, address recipient, uint256 amount, address token) external returns(uint256 proposalId) {
         require(bytes(description).length > 0, "Invalid description");
         require(recipient != address(0), "Invalid recipient address");
@@ -73,6 +94,11 @@ contract DAO is Ownable, ReentrancyGuard {
         emit ProposalCreated(proposalId, msg.sender, description, proposal.startTime, proposal.endTime);
     }
 
+    /**
+     * @dev Vote on a proposal
+     * @param proposalId ID of the proposal to vote on
+     * @param support True for yes, false for no
+     */
     function vote(uint256 proposalId, bool support) external {
         Proposal storage proposal = proposals[proposalId];
         require(proposal.proposer != address(0), "Proposal not defined");
@@ -94,6 +120,10 @@ contract DAO is Ownable, ReentrancyGuard {
         emit Voted(proposalId, msg.sender, support, votes);
     }
 
+    /**
+     * @dev Cancel a proposal (only proposer or owner)
+     * @param proposalId ID of the proposal to cancel
+     */
     function cancelProposal(uint256 proposalId) external {
         Proposal storage proposal = proposals[proposalId];
         require(proposal.proposer != address(0), "Proposal not defined");
@@ -106,6 +136,10 @@ contract DAO is Ownable, ReentrancyGuard {
         emit ProposalCanceled(proposalId);
     }
 
+    /**
+     * @dev Execute a proposal if it has passed
+     * @param proposalId ID of the proposal to execute
+     */
     function executeProposal(uint256 proposalId) external nonReentrant {
         Proposal storage proposal = proposals[proposalId];
         require(proposal.proposer != address(0), "Proposal not defined");
